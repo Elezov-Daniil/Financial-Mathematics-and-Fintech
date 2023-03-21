@@ -1,0 +1,3 @@
+In this work, I generated stochastic processes with various methods and tried to choose the most fitable method for market data using "Estimation-of-the-parameters-of-SDE-by-the-maximum-likelihood-method"
+
+I fit models to a sample of historical interest rates over the period Jan 1, 1962 to April 8, 2021 (14,801 daily observations) and plot the historical daily time series and three time discretization benchmarks: Kessler method, Shoji-Ozaki method, and Euler method using MLE approuch. I calculate the AIC and select the best model. Dataset: Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis (DGS10),
