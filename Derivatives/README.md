@@ -1,0 +1,1 @@
+The aim of the work was to determine the value of the option and the Greek parameters according to the Black-Scholes-Merton model.
