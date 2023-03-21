@@ -1,0 +1,1 @@
+In this work, the task was to test and repeat the results presented in the article by Yiran Cui, Sebastian del Baño Rollin and Guido Germano: "Full and fast calibration of the Heston stochastic volatility model".
