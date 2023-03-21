@@ -1,0 +1,1 @@
+In the work, my goal was to build algorithmic trading strategies (alpha strategies) and portfolio optimization. I wrote the necessary functions and made tests on historical data on US stocks from 2010 to 2015.
