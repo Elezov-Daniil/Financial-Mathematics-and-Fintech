@@ -1,0 +1,1 @@
+In this work, I used grid numerical methods with difference schemes (explicit, implicit, Cranko-Nicholson) and Monte Carlo methods for the numerical solution of the Black Scholes Merton differential equation and compared the numerical solution with the analytical.
