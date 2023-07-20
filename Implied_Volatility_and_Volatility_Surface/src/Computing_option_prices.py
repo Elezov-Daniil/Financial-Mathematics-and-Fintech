@@ -9,14 +9,12 @@ from SVI_curves import get_w_SVI_raw
 Function computes option prices for given implied volatility
 Function returns dataframe with option prices
 '''
-def get_data_about_option(data_dict, filename, optionTypes=None, amount_options='All'): 
+def get_data_about_option(data_dict, options_data, optionTypes=None): 
     low_limit = 0.1
     high_limit = 2.5
     N = 1000
     value_options = pd.DataFrame(columns=['x_grid', 'IV', 'value_option', 'expiry_date','expiry_date_in_act365_year_fraction','optionType', 'strike', 'bid', 'ask'])
-    options_data = pd.read_csv(filename)
-    if not amount_options == 'All':
-        options_data = options_data.loc[pd.to_datetime(options_data['lastTradeDate']) > '2023-05-17 00:00:00'] # keep trades only in last date
+#     options_data = pd.read_csv(filename)
     
     for k in data_dict["implied_volatility_surface"]:
         Option_value = pd.DataFrame()
@@ -49,15 +47,15 @@ def get_data_about_option(data_dict, filename, optionTypes=None, amount_options=
                 Puts = black_price_formula(F, j, T, IV, 'puts')
                 bid_ask_calls = bid_ask.loc[bid_ask['optionType'] == 'calls']
                 bid_ask_puts = bid_ask.loc[bid_ask['optionType'] == 'puts']
-                Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Calls / discount_factor , expiry_date, T, 'calls', j, bid_ask_calls['bid'].item(), bid_ask_calls['ask'].item()]).T])
-                Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Puts / discount_factor, expiry_date, T, 'puts', j,bid_ask_puts['bid'].item(), bid_ask_puts['ask'].item()]).T])
+                Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Calls * discount_factor , expiry_date, T, 'calls', j, bid_ask_calls['bid'].item(), bid_ask_calls['ask'].item()]).T])
+                Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Puts * discount_factor, expiry_date, T, 'puts', j,bid_ask_puts['bid'].item(), bid_ask_puts['ask'].item()]).T])
             else:
                 if (optionType.iloc[0] == 'calls'): # we have only call correspond to this strike
                     Calls = black_price_formula(F, j, T, IV, 'calls')
-                    Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Calls / discount_factor, expiry_date, T,'calls', j,bid_ask['bid'].item(), bid_ask['ask'].item()]).T])
+                    Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Calls * discount_factor, expiry_date, T,'calls', j,bid_ask['bid'].item(), bid_ask['ask'].item()]).T])
                 else:  # we have only put correspond to this strike
                     Puts = black_price_formula(F, j, T, IV, 'puts')
-                    Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Puts / discount_factor, expiry_date, T,'puts', j,bid_ask['bid'].item(), bid_ask['ask'].item()]).T])
+                    Option_value = pd.concat([Option_value, pd.DataFrame([np.exp(x), IV, Puts * discount_factor, expiry_date, T,'puts', j,bid_ask['bid'].item(), bid_ask['ask'].item()]).T])
         
         Option_value.columns = ['x_grid', 'IV', 'value_option', 'expiry_date','expiry_date_in_act365_year_fraction','optionType', 'strike', 'bid', 'ask']
 

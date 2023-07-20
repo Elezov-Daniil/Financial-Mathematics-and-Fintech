@@ -126,7 +126,7 @@ def lines_3D_data_options(ticker, data_dict, type_option='ITM'):
     ax.view_init(20, 40)
     plt.show()
 
-def error_graph_3D(data_dict, ticker, type_option=None):
+def error_graph_3D(data_dict, ticker, data_date, type_option=None):
     plt.figure(figsize = (8,8))
     ax = plt.axes(projection ="3d")
 
@@ -166,12 +166,12 @@ def error_graph_3D(data_dict, ticker, type_option=None):
             ax.scatter( below['expiry_date_in_act365_year_fraction'], below['x_grid'], below['value_option'], s=5, color='b')
             ax.scatter( above['expiry_date_in_act365_year_fraction'], above['x_grid'], above['value_option'], s=5, color='r')
     
-    ax.scatter( inside['expiry_date_in_act365_year_fraction'], inside['x_grid'], inside['value_option'], s=5, color='silver', label ='inside')
-    ax.scatter( below['expiry_date_in_act365_year_fraction'], below['x_grid'], below['value_option'], s=5, color='b', label ='below')
-    ax.scatter( above['expiry_date_in_act365_year_fraction'], above['x_grid'], above['value_option'], s=5, color='r', label = 'above')        
+    ax.scatter(inside['expiry_date_in_act365_year_fraction'], inside['x_grid'], inside['value_option'], s=5, color='silver', label ='inside = ' + str(len(data_dict.loc[data_dict['correct_price'] == 'inside']) / len(data_dict) * 100) + '%')
+    ax.scatter(below['expiry_date_in_act365_year_fraction'], below['x_grid'], below['value_option'], s=5, color='b', label ='below = ' + str(len(data_dict.loc[data_dict['correct_price'] == 'below']) / len(data_dict) * 100) + '%')
+    ax.scatter(above['expiry_date_in_act365_year_fraction'], above['x_grid'], above['value_option'], s=5, color='r', label = 'above = ' + str(len(data_dict.loc[data_dict['correct_price'] == 'above']) / len(data_dict) * 100) + '%')       
     
 
-    ax.set_title(ticker + ' ' + str(type_option))
+    ax.set_title('Error graph for ' + ticker + ' data scrapped on ' + data_date)
     ax.set_xlabel(r'Maturity (year fraction)')
     ax.axes.set_xlim3d(left=0, right=2.5)
     ax.set_ylabel(r'Strike (fwd moneyness)')
@@ -227,7 +227,7 @@ def plot_discount_curve(discount_curve, data_date):
     plt.legend()
     plt.show()
 
-def lines_2D_total_varience(ticker, data_dict, interpolation=False):
+def lines_2D_total_varience(ticker, data_dict, end_number, interpolation=False):
     fig = plt.figure(figsize=(13, 6))
     ax1 = fig.add_subplot(121)
     ax2 = fig.add_subplot(122)
@@ -235,22 +235,22 @@ def lines_2D_total_varience(ticker, data_dict, interpolation=False):
     if interpolation:  
         x_grid = np.linspace(0.1,2.5,1000)
 
-        for j in range(1, len(data_dict["implied_volatility_surface"]) - 13):
+        for j in range(0, len(data_dict["implied_volatility_surface"]) - end_number):
             k = data_dict["implied_volatility_surface"][j]
             ax1.scatter(np.array(x_grid), k['w_SVI_total_variance'], label= k['expiry_date'], s=1)
             ax1.plot(np.array(x_grid),k['w_SVI_total_variance'], linewidth = 0.5)
 
-        for j in range(len(data_dict["implied_volatility_surface"]) - 14, len(data_dict["implied_volatility_surface"])):
+        for j in range(len(data_dict["implied_volatility_surface"]) - end_number, len(data_dict["implied_volatility_surface"])):
             k = data_dict["implied_volatility_surface"][j]
             ax2.scatter(np.array(x_grid), k['w_SVI_total_variance'], label= k['expiry_date'], s=1)
             ax2.plot(np.array(x_grid),k['w_SVI_total_variance'], linewidth = 0.5)
     else:
-        for j in range(0, len(data_dict["implied_volatility_surface"]) - 13):
+        for j in range(0, len(data_dict["implied_volatility_surface"]) - end_number):
             k = data_dict["implied_volatility_surface"][j]
             ax1.scatter(np.array(k['strikes'])/k['reference_forward'], k['w_SVI_total_variance'], label= k['expiry_date'], s=10)
             ax1.plot(np.array(k['strikes'])/k['reference_forward'],k['w_SVI_total_variance'])
         
-        for j in range(len(data_dict["implied_volatility_surface"]) - 14, len(data_dict["implied_volatility_surface"])):
+        for j in range(len(data_dict["implied_volatility_surface"]) - end_number, len(data_dict["implied_volatility_surface"])):
             k = data_dict["implied_volatility_surface"][j]
             ax2.scatter(np.array(k['strikes'])/k['reference_forward'], k['w_SVI_total_variance'], label= k['expiry_date'], s=10)
             ax2.plot(np.array(k['strikes'])/k['reference_forward'],k['w_SVI_total_variance'])

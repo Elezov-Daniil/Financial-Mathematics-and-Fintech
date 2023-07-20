@@ -53,6 +53,7 @@ def computing_SVI_IV(data_dict, ticker, low_limit = 0.1, high_limit = 2.5, N = 1
                     k['max_relative_error'][j] = k['SVI_implied_volatilities'][j] - k['ask_implied_volatilities'][j]
                 else:
                     k['max_relative_error'][j] = k['bid_implied_volatilities'][j] - k['SVI_implied_volatilities'][j]
+        
     
     # keep new calibrated parameters
     initial_parameters_new['date'] = current_date
